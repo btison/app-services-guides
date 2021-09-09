@@ -5,8 +5,9 @@
 To enable the Kafka bin scripts to access a Kafka instance, you must configure the connection using the generated credentials for your {product} service account. For the Kafka bin scripts, you will create a configuration file that defines these values.
 
 .Prerequisites
-
-* You have the generated credentials for your service account. You copied this information previously for the Kafka instance in {product} by selecting the options menu (three vertical dots), clicking *View connection information*, and creating the service account.
+ifndef::qs[]
+* You have the generated credentials for your service account. You copied this information previously for the Kafka instance in {product} by selecting the options menu (three vertical dots), clicking *Connection*, and creating the service account.
+endif::[]
 
 .Procedure
 
@@ -14,8 +15,15 @@ To enable the Kafka bin scripts to access a Kafka instance, you must configure t
 
 . Create a file called `{property-file-name}`.
 
-. In the `{property-file-name}` file, add the following content to set the Kafka instance client credentials. Replace the values with your own server and credential information.
+. In the `{property-file-name}` file, set the Kafka instance client credentials and consumer group ID. Replace the values with your own server and credential information.
 +
+--
+ifdef::qs[]
+The `<client_id>` and `<client_secret>` are the generated credentials for your service account. You copied this information previously for the Kafka instance in {product} by selecting the options menu (three vertical dots), clicking *Connection*, and creating the service account.
+endif::[]
+
+All consumers with the same group ID belong to the consumer group with that ID.
+
 .Setting server and credential values
 [source,subs="+quotes"]
 ----
@@ -24,9 +32,11 @@ security.protocol=SASL_SSL
 
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
   username="__<client_id>__" \
-  password="__<client_secret>__";
+  password="__<client_secret>__" \
+  group.id="__<consumer_group_id>__";
 ----
-+
+
 NOTE: {product} also supports the SASL/OAUTHBEARER mechanism for authentication, which is the recommended authentication mechanism to use. However, the Kafka bin scripts do not yet fully support OAUTHBEARER, so this example uses SASL/PLAIN.
 
+--
 . Save the file. You will use it in the next task to connect to your Kafka instance and produce messages.
